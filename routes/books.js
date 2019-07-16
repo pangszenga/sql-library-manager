@@ -8,7 +8,7 @@ router.get("/pages/:page", (req, res) => {
   // Paginate pages
   const books = [];
   const page = req.params.page;
-  const limit = 5;
+  const limit = 6;
   const offset = limit * (page - 1);
 
   //Order list ascending by Title name
