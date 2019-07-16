@@ -1,0 +1,25 @@
+extends ../layout 
+
+block content  
+    if (errors)
+        h2.error Oh dear, looks like we are missing some information!
+        ul.error
+            each error in errors
+                p
+                    =error.message
+    div.container
+        form(method="POST" action="/books/new")
+            div.form-group 
+                label(for="title") Title:
+                input#title.form-control(type='text', placeholder='Title of Book' name='title')
+            div.form-group
+                label(for="author") Author:
+                input#author.form-control(type='text', placeholder='Full name of Author' name='author')
+            div.form-group
+                label(for="genre") Genre:
+                input#genre.form-control(type='text', placeholder='Genre' name='genre')
+            div.form-group
+                label(for="year") Year:
+                input#year.form-control(type='text', placeholder='Year' name='year')
+            button.button(type='submit') Create
+            a.button(href="/books") Cancel
