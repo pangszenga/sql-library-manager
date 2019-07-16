@@ -1,0 +1,34 @@
+{
+  "name": "sql-library-manager",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "pug": "^2.0.4",
+    "sequelize": "^5.9.4",
+    "sequelize-cli": "^5.5.0",
+    "sequelize-paginate": "^1.1.6",
+    "sqlite3": "^4.0.9"
+  },
+  "description": "sql-library-manager",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "sql-library-manager"
+  },
+  "keywords": [
+    "sql",
+    "library",
+    "manager"
+  ],
+  "author": "Priscilla Pang",
+  "license": "ISC"
+}
