@@ -33,28 +33,34 @@ app.use(function(err, req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
-  res.status(err.status || 404);
-  res.render("page-not-found");
+//   // render the error page
+//   res.status(err.status || 500);
+//   res.render("error");
+// });
+
+app.use((req, res, next) => {
+  const error = new Error("PAGE NOT FOUND!!");
+  error.status = 404;
+  next(error);
 });
 
-// error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-
-  // render the error page
   res.status(err.status || 500);
-  res.render("error");
+  if (err.status === 404) {
+    console.log("404 - PAGE NOT FOUND!");
+    res.render("page-not-found");
+  } else {
+    console.log("500 - INTERNAL SERVER ERROR");
+    res.render("error");
+  }
 });
 
-app.get("*", function(req, res) {
+app.get("*", function(res) {
   res.render("page-not-found");
 });
 module.exports = app;

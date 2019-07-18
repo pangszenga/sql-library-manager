@@ -3,6 +3,13 @@ extends ../layout
 block content
     div.container 
         h1 Update a Book 
+
+    if (errors)
+        h2.error Oh dear, looks like we are missing some information!
+        ul.error
+            each error in errors
+                p
+                    =error.message
     div.container
         form(method="POST" action=`/books/${book.id}/update`)
             div.form-group 

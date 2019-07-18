@@ -67,6 +67,11 @@ router.get("/search", function(req, res) {
     });
 });
 
+/* GET new book form */
+router.get("/new", function(req, res, next) {
+  res.render("books/new", { book: Book.build(), title: "New Book" });
+});
+
 /* POST and update from new book form */
 router.post("/new", function(req, res) {
   Book.create(req.body)
@@ -89,57 +94,61 @@ router.post("/new", function(req, res) {
     });
 });
 
-/* GET new book form */
-router.get("/new", function(req, res, next) {
-  res.render("books/new", { book: Book.build(), title: "New Book" });
-});
-
 /* GET book details */
-router.get("/:id/update", function(req, res, next) {
+// router.get("/:id/update", function(req, res, next) {
+//   Book.findByPk(req.params.id)
+//     .then(function(book) {
+//       res.render("books/update", {
+//         book: book,
+//         title: "Edit Book"
+//       });
+//     })
+//     .then(function(book) {
+//       res.redirect("/");
+//     })
+//     .catch(function(err) {
+//       res.render("page-not-found");
+//     });
+// });
+router.get("/:id/update", (req, res, next) => {
   Book.findByPk(req.params.id)
-    .then(function(book) {
+    .then(book => {
       if (book) {
-        res.render("books/update", {
-          book: book,
-          title: "Edit Book"
-        });
+        res.render("books/update", { book: book });
       } else {
-        res.render("page-not-found", err);
+        const err = new Error();
+        err.status = 404;
+        next(err);
       }
     })
-    .catch(function(err) {
-      res.send(500, err);
+    .catch(err => {
+      err.status = 500;
+      next(err);
     });
 });
 
 /* POST and update book details */
-router.post("/:id/update", function(req, res, next) {
+router.post("/:id/update", (req, res, next) => {
   Book.findByPk(req.params.id)
-    .then(function(Book) {
-      if (Book) {
-        return Book.update(req.body);
-      } else {
-        res.render("error", err);
-      }
+    .then(Book => {
+      return Book.update(req.body);
     })
-    .then(function(Book) {
+    .then(() => {
       res.redirect("/");
     })
-    .catch(function(err) {
-      // Validation
-      if (err.name === "SequelizeValidationError") {
-        let book = Books.build(req.body);
+    .catch(error => {
+      if (error.name === "SequelizeValidationError") {
+        var book = Book.build(req.body);
         book.id = req.params.id;
-        res.render("books/update-book", {
+
+        res.render("books/update", {
           book: book,
-          errors: err.errors
+          errors: error.errors
         });
       } else {
-        throw err;
+        error.status = 500;
+        next(err);
       }
-    })
-    .catch(function(err) {
-      res.render("error", err);
     });
 });
 
@@ -150,11 +159,11 @@ router.post("/:id/delete", function(req, res, next) {
       if (book) {
         return book.destroy();
       } else {
-        res.render("books/page-not-found");
+        res.render("page-not-found");
       }
     })
     .then(() => {
-      res.redirect("/books");
+      res.redirect("/");
     })
     .catch(function(err) {
       res.render("error", err);
